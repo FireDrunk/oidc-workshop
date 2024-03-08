@@ -1,0 +1,37 @@
+version: "3.8"
+
+networks:
+  internal: {}
+
+services:
+  keycloak:
+    hostname: keycloak
+    image: jboss/keycloak:latest
+
+    environment:
+      DB_VENDOR: "h2"
+      KEYCLOAK_USER: "admin"
+      KEYCLOAK_PASSWORD: "admin"
+      KEYCLOAK_IMPORT: "/tmp/realm.json"
+
+    volumes:
+      - ./realm.json:/tmp/realm.json
+
+    networks:
+      - internal
+
+    ports:
+      - 8080:8080
+
+  grafana:
+    hostname: grafana
+    image: grafana/grafana
+
+    volumes:
+      - ./grafana.ini:/etc/grafana/grafana.ini
+
+    networks:
+      - internal
+
+    ports:
+      - 3000:3000
